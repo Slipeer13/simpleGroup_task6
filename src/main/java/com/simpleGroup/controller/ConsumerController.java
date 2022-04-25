@@ -16,12 +16,6 @@ import java.util.List;
 @Controller
 public class ConsumerController {
     private ConsumerService consumerService;
-    private ProductService productService;
-
-    @Autowired
-    public void setProductService(ProductService productService) {
-        this.productService = productService;
-    }
 
     @Autowired
     public void setConsumerService(ConsumerService consumerService) {
@@ -63,21 +57,26 @@ public class ConsumerController {
         return "redirect:/";
     }
 
-    //todo Это метод для ProductController
-    //      См. комментарии к аналогичному методу для ProductController
-    @RequestMapping("/showProductByConsumer")
-    public String showProductByConsumer(@RequestParam("consumerId") Long id, Model model) {
-        Consumer consumer = consumerService.findByIdConsumer(id);
-        List<Product> productList = consumerService.findAllProductsByConsumer(id);
-        model.addAttribute("products", productList);
-        model.addAttribute("nameConsumer", consumer.getName());
-        return "viewProductConsumer";
+
+    //todo Как-то странно получать потребителей через контроллер товаров
+    //      Перемудрил с алгоритмом. Сейчас получается:
+    //      1. берём из базы продукт с заданным id
+    //      2. ещё раз берём из базы продукт с заданным id. Зачем, он ведь у нас уже получен?
+    //      3. Из продукта, полученного в п.2 получаем список потребителей.
+    //      Зачем за одним и тем же продуктом ходить в базу 2 раза?
+    //      Зачем логику получения потребителей выносить в dao?
+    @RequestMapping("/showConsumersByProduct")
+    public String showConsumersByProduct(@RequestParam("productId") Long id, Model model) {
+        Product product = consumerService.findByIdProduct(id);
+        model.addAttribute("consumers", product.getConsumers());
+        model.addAttribute("titleProduct", product.getTitle());
+        return "viewConsumerByProduct";
     }
 
     //todo Зачем контроллеру потребителей зависеть от сервиса продуктов?
     @RequestMapping("/addProductToCart")
     public String addProductToCart(@RequestParam("consumerId") Long id, Model model) {
-        List<Product> list = productService.findAllProducts();
+        List<Product> list = consumerService.findAllProducts();
         model.addAttribute("products", list);
         model.addAttribute("consumerId", id);
         return "addProductToCart";
@@ -89,7 +88,7 @@ public class ConsumerController {
     //      контроллеру без разницы. Ему нужен только результат, чтобы ответ сформировать.
     @RequestMapping("/saveProductToCart")
     public String saveProductToCart(@RequestParam("consumerId") Long consumerId, @RequestParam("productId") Long productId) {
-        Product product = productService.findByIdProduct(productId);
+        Product product = consumerService.findByIdProduct(productId);
         consumerService.saveProductToCart(consumerId, product);
         return "redirect:/";
     }

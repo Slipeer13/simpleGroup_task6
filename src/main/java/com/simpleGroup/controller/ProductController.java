@@ -2,6 +2,7 @@ package com.simpleGroup.controller;
 
 import com.simpleGroup.entity.Consumer;
 import com.simpleGroup.entity.Product;
+import com.simpleGroup.service.ConsumerService;
 import com.simpleGroup.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +17,6 @@ import java.util.List;
 @Controller
 public class ProductController {
     private ProductService productService;
-
     @Autowired
     public void setProductService(ProductService productService) {
         this.productService = productService;
@@ -60,19 +60,13 @@ public class ProductController {
         return "redirect:/";
     }
 
-    //todo Как-то странно получать потребителей через контроллер товаров
-    //      Перемудрил с алгоритмом. Сейчас получается:
-    //      1. берём из базы продукт с заданным id
-    //      2. ещё раз берём из базы продукт с заданным id. Зачем, он ведь у нас уже получен?
-    //      3. Из продукта, полученного в п.2 получаем список потребителей.
-    //      Зачем за одним и тем же продуктом ходить в базу 2 раза?
-    //      Зачем логику получения потребителей выносить в dao?
-    @RequestMapping("/showConsumersByProduct")
-    public String showConsumersByProduct(@RequestParam("productId") Long id, Model model) {
-        Product product = productService.findByIdProduct(id);
-        List<Consumer> consumerList = productService.findAllConsumersByProduct(id);
-        model.addAttribute("consumers", consumerList);
-        model.addAttribute("titleProduct", product.getTitle());
-        return "viewConsumerByProduct";
+    //todo Это метод для ProductController
+    //      См. комментарии к аналогичному методу для ProductController
+    @RequestMapping("/showProductByConsumer")
+    public String showProductByConsumer(@RequestParam("consumerId") Long id, Model model) {
+        Consumer consumer = productService.findByIdConsumer(id);
+        model.addAttribute("products", consumer.getProducts());
+        model.addAttribute("nameConsumer", consumer.getName());
+        return "viewProductConsumer";
     }
 }

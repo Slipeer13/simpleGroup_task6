@@ -14,6 +14,8 @@ public interface ProductService {
 
     void saveOrUpdateProduct(Product product);
 
-    List<Consumer> findAllConsumersByProduct(long id);
+    Boolean checkProductByTitleAndPrice(String title, Integer price);
+
+    Consumer findByIdConsumer(Long id);
 
 }

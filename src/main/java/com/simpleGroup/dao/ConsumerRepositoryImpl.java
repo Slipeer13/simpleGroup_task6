@@ -2,6 +2,7 @@ package com.simpleGroup.dao;
 
 import com.simpleGroup.entity.Consumer;
 import com.simpleGroup.entity.Product;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -12,7 +13,7 @@ import java.util.List;
 
 //todo Название класса не корректное.
 @Repository
-public class ConsumerDAOimpl implements ConsumerDAO{
+public class ConsumerRepositoryImpl implements ConsumerRepository {
     private SessionFactory sessionFactory;
     @Autowired
     public void setSessionFactory(SessionFactory sessionFactory) {
@@ -24,14 +25,15 @@ public class ConsumerDAOimpl implements ConsumerDAO{
     @Override
     public List<Consumer> findAll() {
         Session session = sessionFactory.getCurrentSession();
-        List<Consumer> consumerList = session.createQuery("Select a from Consumer a", Consumer.class).getResultList();
-        return consumerList;
+        return session.createQuery("from Consumer", Consumer.class).getResultList();
     }
 
     @Override
     public Consumer findById(long id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.get(Consumer.class, id);
+        Consumer consumer = session.get(Consumer.class, id);
+        Hibernate.initialize(consumer.getProducts());
+        return consumer;
     }
 
     @Override
@@ -49,13 +51,7 @@ public class ConsumerDAOimpl implements ConsumerDAO{
     }
 
     //todo См. аналогичный метод в dao продукта.
-    @Override
-    public List<Product> findAllProductsByConsumer(long id) {
-        Session session = sessionFactory.getCurrentSession();
-        Consumer consumer = session.get(Consumer.class, id);
-        consumer.getProductList().size();
-        return consumer.getProductList();
-    }
+
 
     //todo Ни к чему эта логика в dao.
     //      Если несколько продуктов нужно будет добавить в корзину,
@@ -64,11 +60,5 @@ public class ConsumerDAOimpl implements ConsumerDAO{
     //          Сервис получил потребителя, получил продукт.
     //          Добавил продукт в корзину потребителя.
     //          Сохранил изменения.
-    @Override
-    public void saveProductToCart(Long consumerId, Product product) {
-        Session session = sessionFactory.getCurrentSession();
-        Consumer consumer = session.get(Consumer.class, consumerId);
-        consumer.getProductList().size();
-        consumer.getProductList().add(product);
-    }
+
 }

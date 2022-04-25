@@ -14,8 +14,9 @@ public interface ConsumerService {
 
     void saveOrUpdateConsumer(Consumer consumer);
 
-    List<Product> findAllProductsByConsumer(long id);
-
     void saveProductToCart(Long consumerId, Product product);
 
+    List<Product> findAllProducts();
+
+    Product findByIdProduct(Long id);
 }

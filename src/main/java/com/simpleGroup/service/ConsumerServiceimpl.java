@@ -1,6 +1,7 @@
 package com.simpleGroup.service;
 
-import com.simpleGroup.dao.ConsumerDAO;
+import com.simpleGroup.dao.ConsumerRepository;
+import com.simpleGroup.dao.ProductRepository;
 import com.simpleGroup.entity.Consumer;
 import com.simpleGroup.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,46 +12,61 @@ import java.util.List;
 
 @Service
 public class ConsumerServiceimpl implements ConsumerService{
-    private ConsumerDAO consumerDAO;
+    private ConsumerRepository consumerRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    public void setConsumerDAO(ConsumerDAO consumerDAO) {
-        this.consumerDAO = consumerDAO;
+    public void setConsumerDAO(ConsumerRepository consumerRepository) {
+        this.consumerRepository = consumerRepository;
+    }
+    @Autowired
+    public void setProductDAO(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @Override
     @Transactional
     public List<Consumer> findAllConsumers() {
-        return consumerDAO.findAll();
+        return consumerRepository.findAll();
     }
 
     @Override
     @Transactional
     public Consumer findByIdConsumer(long id) {
-        return consumerDAO.findById(id);
+        return consumerRepository.findById(id);
     }
 
     @Override
     @Transactional
     public void deleteByIdConsumer(long id) {
-        consumerDAO.deleteById(id);
+        consumerRepository.deleteById(id);
     }
 
     @Override
     @Transactional
     public void saveOrUpdateConsumer(Consumer consumer) {
-        consumerDAO.saveOrUpdate(consumer);
-    }
-
-    @Override
-    @Transactional
-    public List<Product> findAllProductsByConsumer(long id) {
-        return consumerDAO.findAllProductsByConsumer(id);
+        if(!consumer.getName().isEmpty()) {
+            consumerRepository.saveOrUpdate(consumer);
+        }
     }
 
     @Override
     @Transactional
     public void saveProductToCart(Long consumerId, Product product) {
-        consumerDAO.saveProductToCart(consumerId, product);
+        Consumer consumer = findByIdConsumer(consumerId);
+        consumer.getProducts().add(product);
+        saveOrUpdateConsumer(consumer);
+    }
+
+    @Override
+    @Transactional
+    public List<Product> findAllProducts() {
+        return productRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public Product findByIdProduct(Long id) {
+        return productRepository.findById(id);
     }
 }
