@@ -1,4 +1,4 @@
-package com.simpleGroup.entity;
+package com.simplegrouptask6.entity;
 
 import lombok.Data;
 

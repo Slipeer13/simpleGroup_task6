@@ -1,6 +1,6 @@
-package com.simpleGroup.dao;
+package com.simplegrouptask6.dao;
 
-import com.simpleGroup.entity.Consumer;
+import com.simplegrouptask6.entity.Consumer;
 
 import java.util.List;
 

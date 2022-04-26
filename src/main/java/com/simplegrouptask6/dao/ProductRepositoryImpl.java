@@ -1,6 +1,6 @@
-package com.simpleGroup.dao;
+package com.simplegrouptask6.dao;
 
-import com.simpleGroup.entity.Product;
+import com.simplegrouptask6.entity.Product;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
