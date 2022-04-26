@@ -1,9 +1,9 @@
-package com.simpleGroup.service;
+package com.simplegrouptask6.service;
 
-import com.simpleGroup.dao.ConsumerRepository;
-import com.simpleGroup.dao.ProductRepository;
-import com.simpleGroup.entity.Consumer;
-import com.simpleGroup.entity.Product;
+import com.simplegrouptask6.dao.ConsumerRepository;
+import com.simplegrouptask6.dao.ProductRepository;
+import com.simplegrouptask6.entity.Consumer;
+import com.simplegrouptask6.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

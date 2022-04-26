@@ -1,8 +1,8 @@
-package com.simpleGroup.controller;
+package com.simplegrouptask6.controller;
 
-import com.simpleGroup.entity.Consumer;
-import com.simpleGroup.entity.Product;
-import com.simpleGroup.service.ConsumerService;
+import com.simplegrouptask6.entity.Consumer;
+import com.simplegrouptask6.entity.Product;
+import com.simplegrouptask6.service.ConsumerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
