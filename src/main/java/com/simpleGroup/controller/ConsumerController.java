@@ -3,7 +3,6 @@ package com.simpleGroup.controller;
 import com.simpleGroup.entity.Consumer;
 import com.simpleGroup.entity.Product;
 import com.simpleGroup.service.ConsumerService;
-import com.simpleGroup.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

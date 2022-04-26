@@ -13,4 +13,6 @@ public interface ConsumerRepository {
 
     void saveOrUpdate(Consumer consumer);
 
+    Boolean checkConsumerToDB(Consumer consumer);
+
 }
