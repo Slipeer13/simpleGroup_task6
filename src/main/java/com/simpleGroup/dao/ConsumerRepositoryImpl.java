@@ -50,6 +50,14 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
         session.saveOrUpdate(consumer);
     }
 
+    @Override
+    public Boolean checkConsumerToDB(Consumer consumer) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<Consumer> query = session.createQuery("Select a from Consumer a where a.name =:consumerName", Consumer.class);
+        query.setParameter("consumerName", consumer.getName());
+        return query.getResultList().size() > 0;
+    }
+
     //todo См. аналогичный метод в dao продукта.
 
 

@@ -46,8 +46,15 @@ public class ConsumerServiceimpl implements ConsumerService{
     @Transactional
     public void saveOrUpdateConsumer(Consumer consumer) {
         if(!consumer.getName().isEmpty()) {
-            consumerRepository.saveOrUpdate(consumer);
+            Boolean exist = checkConsumerToDB(consumer);
+            if (!exist) {
+                consumerRepository.saveOrUpdate(consumer);
+            }
         }
+    }
+
+    private Boolean checkConsumerToDB(Consumer consumer) {
+        return consumerRepository.checkConsumerToDB(consumer);
     }
 
     @Override
