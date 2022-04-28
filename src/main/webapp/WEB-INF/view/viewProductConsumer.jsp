@@ -23,17 +23,13 @@
         </th>
     </tr>
     <tr>
-        <c:forEach var="product" items="${products}">
-
-        <td>${product.id} </td>
-        <td>${product.title} </td>
-        <td>${product.price} </td>
-
-    </c:forEach>
-    <c:forEach var="count" items="${countProduct}">
-
-            <td>${count}</td>
-
+        <c:forEach var="entry" items="${products}">
+    <tr>
+        <td>${entry.key.id} </td>
+        <td>${entry.key.title} </td>
+        <td>${entry.key.price} </td>
+        <td>${entry.value} </td>
+    </tr>
     </c:forEach>
     </tr>
 </table>

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 //todo Файл pom так и не привёл в порядок. Комментарии были ещё в 4 таске.
@@ -66,10 +67,8 @@ public class ProductController {
     @RequestMapping("/showProductByConsumer")
     public String showProductByConsumer(@RequestParam("consumerId") Long id, Model model) {
         Consumer consumer = productService.findByIdConsumer(id);
-        Set<Product> products = consumer.getProductsMap(consumer.getProducts()).keySet();
-        Set<Long> countProduct = new HashSet<>(consumer.getProductsMap(consumer.getProducts()).values());
+        Map<Product, Long> products = consumer.getProductsMap(consumer.getProducts());
         model.addAttribute("products", products);
-        model.addAttribute("countProduct", countProduct);
         model.addAttribute("nameConsumer", consumer.getName());
         return "viewProductConsumer";
     }
