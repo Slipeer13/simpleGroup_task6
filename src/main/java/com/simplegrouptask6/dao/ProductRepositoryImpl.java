@@ -39,9 +39,12 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public void deleteById(long id) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Product> query = session.createQuery("delete from Product where id =:productId");
+        Product product = findById(id);
+        session.delete(product);//теперь, если CascadeType.ALL, то удалятся и сущности из связанных таблиц
+
+        /*Query<Product> query = session.createQuery("delete from Product where id =:productId");
         query.setParameter("productId", id);
-        query.executeUpdate();
+        query.executeUpdate();*/
 
     }
 

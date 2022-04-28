@@ -12,6 +12,7 @@ import java.util.List;
 
 @Service
 public class ConsumerServiceimpl implements ConsumerService{
+
     private ConsumerRepository consumerRepository;
     private ProductRepository productRepository;
 
@@ -47,7 +48,6 @@ public class ConsumerServiceimpl implements ConsumerService{
     public void saveOrUpdateConsumer(Consumer consumer) {
         if(!consumer.getName().isEmpty()) {
             Boolean exist = checkConsumerToDB(consumer);
-            System.out.println(exist);
             if (!exist) {
                 consumerRepository.saveOrUpdate(consumer);
             }
@@ -63,7 +63,6 @@ public class ConsumerServiceimpl implements ConsumerService{
     public void saveProductToCart(Long consumerId, Product product) {
         Consumer consumer = findByIdConsumer(consumerId);
         consumer.getProducts().add(product);
-
     }
 
     @Override

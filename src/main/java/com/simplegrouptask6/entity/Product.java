@@ -1,9 +1,9 @@
 package com.simplegrouptask6.entity;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +11,10 @@ import java.util.Objects;
 //      Опять же, нет файлов со скриптом или миграциями, чтобы оценить, как организована БД.
 //      Для конструкторов так же можно использовать Lombok. Раз он появился в проекте.
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Table(name = "product")
 public class Product {
 
@@ -24,28 +27,21 @@ public class Product {
     private Integer price;
     //todo Есть тип каскада, который объединяет все эти типы. Проще указать один, чем перечислять все.
     //      Поле корректней назвать consumers.
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "consumer_product", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "consumer_id"))
-    private List<Consumer> consumers = new ArrayList<>();
-
-    public Product() {
-    }
-
-    public Product(String title, Integer price) {
-        this.title = title;
-        this.price = price;
-    }
+    @ToString.Exclude
+    private List<Consumer> consumers;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Product product = (Product) o;
-        return title.equals(product.title) && price.equals(product.price);
+        return id != null && Objects.equals(id, product.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, price);
+        return getClass().hashCode();
     }
 }

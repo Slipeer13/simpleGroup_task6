@@ -39,9 +39,12 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
     @Override
     public void deleteById(long id) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Product> query = session.createQuery("delete from Consumer where id =:consumerId");
+        Consumer consumer = findById(id);
+        session.delete(consumer);//теперь, если CascadeType.ALL, то удалятся и сущности из связанных таблиц
+
+       /* Query<Product> query = session.createQuery("delete from Consumer where id =:consumerId");
         query.setParameter("consumerId", id);
-        query.executeUpdate();
+        query.executeUpdate();*/
     }
 
     @Override

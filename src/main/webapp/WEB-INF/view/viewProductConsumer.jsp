@@ -18,14 +18,24 @@
         <th>
             Price
         </th>
+        <th>
+            Count
+        </th>
     </tr>
-    <c:forEach var="product" items="${products}">
-        <tr>
-            <td>${product.id}</td>
-            <td>${product.title}</td>
-            <td>${product.price}</td>
-        </tr>
+    <tr>
+        <c:forEach var="product" items="${products}">
+
+        <td>${product.id} </td>
+        <td>${product.title} </td>
+        <td>${product.price} </td>
+
     </c:forEach>
+    <c:forEach var="count" items="${countProduct}">
+
+            <td>${count}</td>
+
+    </c:forEach>
+    </tr>
 </table>
 <br><br>
 </body>
