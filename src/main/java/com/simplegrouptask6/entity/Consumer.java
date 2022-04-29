@@ -27,6 +27,7 @@ public class Consumer {
     @ToString.Exclude
     private List<Product> products;
 
+    //todo Это бизнес-логика. Её не должно быть в сущности. Она должна быть в сервисе.
     public Map<Product, Long> getProductsMap(List<Product> products) {
         Map<Product, Long> result = new HashMap<>();
         for (Product p :

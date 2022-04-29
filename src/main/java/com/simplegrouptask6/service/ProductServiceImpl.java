@@ -42,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
+    //todo Если title = null будет падать NPE скорее всего. Или невозможно попасть в этот метод с title = null?
     @Override
     @Transactional
     public void saveOrUpdateProduct(Product product) {

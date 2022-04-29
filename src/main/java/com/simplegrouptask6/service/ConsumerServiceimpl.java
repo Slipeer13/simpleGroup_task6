@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+//todo Для продуктов поправил название класса сервиса, для потребителей нет.
 @Service
 public class ConsumerServiceimpl implements ConsumerService{
 
@@ -43,6 +44,7 @@ public class ConsumerServiceimpl implements ConsumerService{
         consumerRepository.deleteById(id);
     }
 
+    //todo А если имя null? Или не может быть?
     @Override
     @Transactional
     public void saveOrUpdateConsumer(Consumer consumer) {

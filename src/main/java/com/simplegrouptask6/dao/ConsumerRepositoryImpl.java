@@ -20,8 +20,6 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
         this.sessionFactory = sessionFactory;
     }
 
-    //todo Почему алиас "a"?
-    //      Вернуть можно сразу результат запроса.
     @Override
     public List<Consumer> findAll() {
         Session session = sessionFactory.getCurrentSession();
@@ -40,7 +38,9 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
     public void deleteById(long id) {
         Session session = sessionFactory.getCurrentSession();
         Consumer consumer = findById(id);
-        session.delete(consumer);//теперь, если CascadeType.ALL, то удалятся и сущности из связанных таблиц
+        session.delete(consumer);
+        //todo Смотри комменты в репо продукта.
+        //теперь, если CascadeType.ALL, то удалятся и сущности из связанных таблиц
 
        /* Query<Product> query = session.createQuery("delete from Consumer where id =:consumerId");
         query.setParameter("consumerId", id);
@@ -53,6 +53,7 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
         session.saveOrUpdate(consumer);
     }
 
+    //todo Почему алиас а,?
     @Override
     public Boolean checkConsumerToDB(Consumer consumer) {
         Session session = sessionFactory.getCurrentSession();
@@ -60,16 +61,4 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
         query.setParameter("consumerName", consumer.getName());
         return query.getResultList().size() > 0;
     }
-
-    //todo См. аналогичный метод в dao продукта.
-
-
-    //todo Ни к чему эта логика в dao.
-    //      Если несколько продуктов нужно будет добавить в корзину,
-    //      будешь ещё один метод в dao добавлять?
-    //      Лучше так:
-    //          Сервис получил потребителя, получил продукт.
-    //          Добавил продукт в корзину потребителя.
-    //          Сохранил изменения.
-
 }
