@@ -56,14 +56,6 @@ public class ConsumerController {
         return "redirect:/";
     }
 
-
-    //todo Как-то странно получать потребителей через контроллер товаров
-    //      Перемудрил с алгоритмом. Сейчас получается:
-    //      1. берём из базы продукт с заданным id
-    //      2. ещё раз берём из базы продукт с заданным id. Зачем, он ведь у нас уже получен?
-    //      3. Из продукта, полученного в п.2 получаем список потребителей.
-    //      Зачем за одним и тем же продуктом ходить в базу 2 раза?
-    //      Зачем логику получения потребителей выносить в dao?
     @RequestMapping("/showConsumersByProduct")
     public String showConsumersByProduct(@RequestParam("productId") Long id, Model model) {
         Product product = consumerService.findByIdProduct(id);
@@ -72,7 +64,6 @@ public class ConsumerController {
         return "viewConsumerByProduct";
     }
 
-    //todo Зачем контроллеру потребителей зависеть от сервиса продуктов?
     @RequestMapping("/addProductToCart")
     public String addProductToCart(@RequestParam("consumerId") Long id, Model model) {
         List<Product> list = consumerService.findAllProducts();
@@ -81,10 +72,6 @@ public class ConsumerController {
         return "addProductToCart";
     }
 
-    //todo Убери всю эту логику в consumerService.
-    //      Лучше сделай так. Контроллер принял запрос с параметрами. Запросил результат у своего сервиса с этими параметрами.
-    //      Сервис параметры обработал, результат вернул в контроллер. Как сервис обрабатывает параметры,
-    //      контроллеру без разницы. Ему нужен только результат, чтобы ответ сформировать.
     @RequestMapping("/saveProductToCart")
     public String saveProductToCart(@RequestParam("consumerId") Long consumerId, @RequestParam("productId") Long productId) {
         Product product = consumerService.findByIdProduct(productId);

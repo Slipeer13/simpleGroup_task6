@@ -1,2 +1,4 @@
 # Project exclude paths
 /target/
+/simpleGroup_task5.iml
+/.idea/

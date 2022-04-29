@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-//todo Некорректное название класса, переходящее из таски в таску.
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
 
@@ -20,8 +19,6 @@ public class ProductRepositoryImpl implements ProductRepository {
         this.sessionFactory = sessionFactory;
     }
 
-    //todo Почему алиас "a" в запросе?
-    //      Создавать именованную переменную в данном случае ни к чему. Можно сразу возвращать результат запроса.
     @Override
     public List<Product> findAll() {
         Session session = sessionFactory.getCurrentSession();
@@ -40,7 +37,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     public void deleteById(long id) {
         Session session = sessionFactory.getCurrentSession();
         Product product = findById(id);
-        session.delete(product);//теперь, если CascadeType.ALL, то удалятся и сущности из связанных таблиц
+        session.delete(product);
+        //todo Чтобы этого не происходило, можно список потребителей перед удалением делать пустым.
+        //      Или можно поиграться с orphanRemoval.
+        //      Или можно для удаления продукта получать его не подтягивая его потребителей, инициализация же lazy.
+        //теперь, если CascadeType.ALL, то удалятся и сущности из связанных таблиц
 
         /*Query<Product> query = session.createQuery("delete from Product where id =:productId");
         query.setParameter("productId", id);
@@ -54,11 +55,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         session.saveOrUpdate(product);
     }
 
-    //todo Для чего определяется размер списка потребителей?
-    //      Логика этого метода в dao не нужна. Уже есть метод findById.
-    //      Сервис должен получить продукт, и вернуть список потребителей этого продукта.
-
-
+    //todo Опять алиас "a" для Product. Так не делают.
     @Override
     public Boolean checkProductByTitleAndPrice(String title, Integer price) {
         Session session = sessionFactory.getCurrentSession();
