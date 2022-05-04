@@ -29,7 +29,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     public Product findById(long id) {
         Session session = sessionFactory.getCurrentSession();
         Product product = session.get(Product.class, id);
-        Hibernate.initialize(product.getConsumers());
+        if(product != null) {
+            Hibernate.initialize(product.getOrders());
+        }
         return product;
     }
 
@@ -59,7 +61,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Boolean checkProductByTitleAndPrice(String title, Integer price) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Product> query = session.createQuery("Select a from Product a where a.title =:productTitle and a.price =:productPrice", Product.class);
+        Query<Product> query = session.createQuery("from Product where title =:productTitle and price =:productPrice", Product.class);
         query.setParameter("productTitle", title);
         query.setParameter("productPrice", price);
         return query.getResultList().size() > 0;

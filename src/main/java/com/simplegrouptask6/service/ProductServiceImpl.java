@@ -43,15 +43,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     //todo Если title = null будет падать NPE скорее всего. Или невозможно попасть в этот метод с title = null?
+    //теперь product==null не попадёт
     @Override
     @Transactional
     public void saveOrUpdateProduct(Product product) {
-        if(!product.getTitle().isEmpty() && product.getPrice() > 0) {
-            Boolean exist = checkProductByTitleAndPrice(product.getTitle(), product.getPrice());
-            if (!exist) {
-                productRepository.saveOrUpdate(product);
-            }
-        }
+        productRepository.saveOrUpdate(product);
     }
 
     @Override

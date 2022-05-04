@@ -1,19 +1,21 @@
 package com.simplegrouptask6.controller;
 
 import com.simplegrouptask6.entity.Consumer;
+import com.simplegrouptask6.entity.Order;
 import com.simplegrouptask6.entity.Product;
 import com.simplegrouptask6.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashSet;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Controller
 public class ProductController {
@@ -38,7 +40,26 @@ public class ProductController {
 
     @RequestMapping("/saveOrUpdateProduct")
     public String saveOrUpdateProduct(@ModelAttribute("product") Product product) {
-        productService.saveOrUpdateProduct(product);
+        if (product != null) {
+            if(product.getTitle() == null || product.getPrice() == null) {
+                throw new EntityNotFoundException("the product title or price is null");
+            }
+            else
+            if(!product.getTitle().trim().isEmpty() && product.getPrice() > 0) {
+                Boolean exist = productService.checkProductByTitleAndPrice(product.getTitle(), product.getPrice());
+                if (!exist) {
+                    productService.saveOrUpdateProduct(product);
+                }
+                else throw new EntityExistsException("there is such a product in database");
+            }
+            else {
+                throw new EntityNotFoundException("the product title is empty or price is negative");
+            }
+        }
+        else {
+            throw new EntityNotFoundException("the product is null");
+        }
+
         return "redirect:/";
     }
 
@@ -52,13 +73,19 @@ public class ProductController {
     @RequestMapping("/updateProduct")
     public String updateProduct(@RequestParam("productId") Long id, Model model) {
         Product product = productService.findByIdProduct(id);
+        if(product == null) {
+            throw new EntityNotFoundException("There is no product with id = " + id);
+        }
         model.addAttribute("product", product);
-
         return "saveOrUpdateProduct";
     }
 
     @RequestMapping("/deleteProduct")
     public String deleteProduct(@RequestParam("productId") Long id) {
+        Product product = productService.findByIdProduct(id);
+        if(product == null) {
+            throw new EntityNotFoundException("There is no product with id = " + id);
+        }
         productService.deleteByIdProduct(id);
         return "redirect:/";
     }
@@ -75,9 +102,24 @@ public class ProductController {
     @RequestMapping("/showProductByConsumer")
     public String showProductByConsumer(@RequestParam("consumerId") Long id, Model model) {
         Consumer consumer = productService.findByIdConsumer(id);
-        Map<Product, Long> products = consumer.getProductsMap(consumer.getProducts());
-        model.addAttribute("products", products);
-        model.addAttribute("nameConsumer", consumer.getName());
+        if(consumer != null) {
+            List<Order> orders = consumer.getOrders();
+            model.addAttribute("orders", orders);
+            model.addAttribute("nameConsumer", consumer.getName());
+        }
         return "viewProductConsumer";
+    }
+
+    @ExceptionHandler
+    public ModelAndView handleException(EntityNotFoundException exception) {
+        ModelAndView modelAndView = new ModelAndView("errorPage");
+        modelAndView.addObject("exception", exception.getMessage());
+        return modelAndView;
+    }
+    @ExceptionHandler
+    public ModelAndView handleException(EntityExistsException exception) {
+        ModelAndView modelAndView = new ModelAndView("errorPage");
+        modelAndView.addObject("exception", exception.getMessage());
+        return modelAndView;
     }
 }

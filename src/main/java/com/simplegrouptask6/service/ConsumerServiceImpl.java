@@ -1,8 +1,10 @@
 package com.simplegrouptask6.service;
 
 import com.simplegrouptask6.dao.ConsumerRepository;
+import com.simplegrouptask6.dao.OrderRepository;
 import com.simplegrouptask6.dao.ProductRepository;
 import com.simplegrouptask6.entity.Consumer;
+import com.simplegrouptask6.entity.Order;
 import com.simplegrouptask6.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +14,11 @@ import java.util.List;
 
 //todo Для продуктов поправил название класса сервиса, для потребителей нет.
 @Service
-public class ConsumerServiceimpl implements ConsumerService{
+public class ConsumerServiceImpl implements ConsumerService{
 
     private ConsumerRepository consumerRepository;
     private ProductRepository productRepository;
+    private OrderRepository orderRepository;
 
     @Autowired
     public void setConsumerDAO(ConsumerRepository consumerRepository) {
@@ -24,6 +27,10 @@ public class ConsumerServiceimpl implements ConsumerService{
     @Autowired
     public void setProductDAO(ProductRepository productRepository) {
         this.productRepository = productRepository;
+    }
+    @Autowired
+    public void setOrderRepository(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -48,15 +55,12 @@ public class ConsumerServiceimpl implements ConsumerService{
     @Override
     @Transactional
     public void saveOrUpdateConsumer(Consumer consumer) {
-        if(!consumer.getName().isEmpty()) {
-            Boolean exist = checkConsumerToDB(consumer);
-            if (!exist) {
-                consumerRepository.saveOrUpdate(consumer);
-            }
-        }
+        consumerRepository.saveOrUpdate(consumer);
     }
 
-    private Boolean checkConsumerToDB(Consumer consumer) {
+    @Override
+    @Transactional
+    public Boolean checkConsumerToDB(Consumer consumer) {
         return consumerRepository.checkConsumerToDB(consumer);
     }
 
@@ -64,7 +68,18 @@ public class ConsumerServiceimpl implements ConsumerService{
     @Transactional
     public void saveProductToCart(Long consumerId, Product product) {
         Consumer consumer = findByIdConsumer(consumerId);
-        consumer.getProducts().add(product);
+        Order orderToDB = orderRepository.findByConsumerAndProduct(consumer, product);
+        if(orderToDB == null) {
+            Order order = new Order();
+            order.setConsumer(consumer);
+            order.setProduct(product);
+            order.setQuantity(1);
+            orderRepository.saveOrUpdate(order);
+        }
+        else {
+            orderToDB.setQuantity(orderToDB.getQuantity() + 1);
+            orderRepository.saveOrUpdate(orderToDB);
+        }
     }
 
     @Override

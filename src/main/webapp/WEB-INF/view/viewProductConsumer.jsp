@@ -19,16 +19,16 @@
             Price
         </th>
         <th>
-            Count
+            Quantity
         </th>
     </tr>
     <tr>
-        <c:forEach var="entry" items="${products}">
+        <c:forEach var="order" items="${orders}">
     <tr>
-        <td>${entry.key.id} </td>
-        <td>${entry.key.title} </td>
-        <td>${entry.key.price} </td>
-        <td>${entry.value} </td>
+        <td>${order.product.id} </td>
+        <td>${order.product.title} </td>
+        <td>${order.product.price} </td>
+        <td>${order.quantity} </td>
     </tr>
     </c:forEach>
     </tr>

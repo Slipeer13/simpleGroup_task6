@@ -17,10 +17,10 @@
         </th>
 
     </tr>
-    <c:forEach var="consumer" items="${consumers}">
+    <c:forEach var="order" items="${orders}">
         <tr>
-            <td>${consumer.id}</td>
-            <td>${consumer.name}</td>
+            <td>${order.consumer.id}</td>
+            <td>${order.consumer.name}</td>
         </tr>
     </c:forEach>
 </table>

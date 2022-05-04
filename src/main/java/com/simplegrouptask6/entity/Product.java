@@ -1,9 +1,9 @@
 package com.simplegrouptask6.entity;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,10 +27,8 @@ public class Product {
     private Integer price;
     //todo Есть тип каскада, который объединяет все эти типы. Проще указать один, чем перечислять все.
     //      Поле корректней назвать consumers.
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(name = "consumer_product", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "consumer_id"))
-    @ToString.Exclude
-    private List<Consumer> consumers;
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "product")
+    List<Order> orders;
 
     @Override
     public boolean equals(Object o) {

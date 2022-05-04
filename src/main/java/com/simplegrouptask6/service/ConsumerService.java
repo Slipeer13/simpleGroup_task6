@@ -19,4 +19,7 @@ public interface ConsumerService {
     List<Product> findAllProducts();
 
     Product findByIdProduct(Long id);
+
+    Boolean checkConsumerToDB(Consumer consumer);
+
 }
