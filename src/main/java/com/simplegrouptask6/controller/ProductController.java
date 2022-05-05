@@ -7,6 +7,8 @@ import com.simplegrouptask6.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +17,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.List;
 
+@Validated
 @Controller
 public class ProductController {
     private ProductService productService;
@@ -39,26 +43,11 @@ public class ProductController {
     }
 
     @RequestMapping("/saveOrUpdateProduct")
-    public String saveOrUpdateProduct(@ModelAttribute("product") Product product) {
-        if (product != null) {
-            if(product.getTitle() == null || product.getPrice() == null) {
-                throw new EntityNotFoundException("the product title or price is null");
-            }
-            else
-            if(!product.getTitle().trim().isEmpty() && product.getPrice() > 0) {
-                Boolean exist = productService.checkProductByTitleAndPrice(product.getTitle(), product.getPrice());
-                if (!exist) {
-                    productService.saveOrUpdateProduct(product);
-                }
-                else throw new EntityExistsException("there is such a product in database");
-            }
-            else {
-                throw new EntityNotFoundException("the product title is empty or price is negative");
-            }
+    public String saveOrUpdateProduct(@Valid @ModelAttribute("product") Product product, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "saveOrUpdateProduct";
         }
-        else {
-            throw new EntityNotFoundException("the product is null");
-        }
+        productService.saveOrUpdateProduct(product);
 
         return "redirect:/";
     }
@@ -73,19 +62,12 @@ public class ProductController {
     @RequestMapping("/updateProduct")
     public String updateProduct(@RequestParam("productId") Long id, Model model) {
         Product product = productService.findByIdProduct(id);
-        if(product == null) {
-            throw new EntityNotFoundException("There is no product with id = " + id);
-        }
         model.addAttribute("product", product);
         return "saveOrUpdateProduct";
     }
 
     @RequestMapping("/deleteProduct")
     public String deleteProduct(@RequestParam("productId") Long id) {
-        Product product = productService.findByIdProduct(id);
-        if(product == null) {
-            throw new EntityNotFoundException("There is no product with id = " + id);
-        }
         productService.deleteByIdProduct(id);
         return "redirect:/";
     }
@@ -102,11 +84,9 @@ public class ProductController {
     @RequestMapping("/showProductByConsumer")
     public String showProductByConsumer(@RequestParam("consumerId") Long id, Model model) {
         Consumer consumer = productService.findByIdConsumer(id);
-        if(consumer != null) {
-            List<Order> orders = consumer.getOrders();
-            model.addAttribute("orders", orders);
-            model.addAttribute("nameConsumer", consumer.getName());
-        }
+        List<Order> orders = consumer.getOrders();
+        model.addAttribute("orders", orders);
+        model.addAttribute("nameConsumer", consumer.getName());
         return "viewProductConsumer";
     }
 

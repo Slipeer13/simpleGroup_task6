@@ -7,6 +7,8 @@ import com.simplegrouptask6.service.ConsumerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +17,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.List;
 
+@Validated
 @Controller
 public class ConsumerController {
     private ConsumerService consumerService;
@@ -41,27 +45,11 @@ public class ConsumerController {
     }
 
     @RequestMapping("/saveOrUpdateConsumer")
-    public String saveOrUpdateConsumer(@ModelAttribute("consumer")Consumer consumer) {
-        if (consumer != null) {
-            if(consumer.getName() == null) {
-                throw new EntityNotFoundException("the consumer name is null");
-            }
-            else
-            if(!consumer.getName().trim().isEmpty()) {
-                Boolean exist = consumerService.checkConsumerToDB(consumer);
-                if (!exist) {
-                    consumerService.saveOrUpdateConsumer(consumer);
-                }
-                else throw new EntityExistsException("there is such a consumer in database");
-            }
-            else {
-                throw new EntityNotFoundException("The consumer name is empty");
-            }
+    public String saveOrUpdateConsumer(@Valid @ModelAttribute("consumer")Consumer consumer, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "saveOrUpdateConsumer";
         }
-        else {
-            throw new EntityNotFoundException("the consumer is null");
-        }
-
+        consumerService.saveOrUpdateConsumer(consumer);
         return "redirect:/";
     }
 
@@ -69,20 +57,12 @@ public class ConsumerController {
     @RequestMapping("/updateConsumer")
     public String updateConsumer(@RequestParam("consumerId") Long id, Model model) {
         Consumer consumer = consumerService.findByIdConsumer(id);
-        if(consumer == null) {
-            throw new EntityNotFoundException("There is no consumer with id = " + id);
-        }
         model.addAttribute("consumer", consumer);
-
         return "saveOrUpdateConsumer";
     }
 
     @RequestMapping("/deleteConsumer")
     public String deleteConsumer(@RequestParam("consumerId") Long id) {
-        Consumer consumer = consumerService.findByIdConsumer(id);
-        if(consumer == null) {
-            throw new EntityNotFoundException("There is no consumer with id = " + id);
-        }
         consumerService.deleteByIdConsumer(id);
         return "redirect:/";
     }
@@ -98,10 +78,8 @@ public class ConsumerController {
     @RequestMapping("/showConsumersByProduct")
     public String showConsumersByProduct(@RequestParam("productId") Long id, Model model) {
         Product product = consumerService.findByIdProduct(id);
-        if(product != null) {
-            model.addAttribute("orders", product.getOrders());
-            model.addAttribute("titleProduct", product.getTitle());
-        }
+        model.addAttribute("orders", product.getOrders());
+        model.addAttribute("titleProduct", product.getTitle());
         return "viewConsumerByProduct";
     }
 

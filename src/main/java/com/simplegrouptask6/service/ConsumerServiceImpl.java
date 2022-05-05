@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 //todo Для продуктов поправил название класса сервиса, для потребителей нет.
@@ -17,16 +19,16 @@ import java.util.List;
 public class ConsumerServiceImpl implements ConsumerService{
 
     private ConsumerRepository consumerRepository;
-    private ProductRepository productRepository;
+    private ProductService productService;
     private OrderRepository orderRepository;
 
     @Autowired
-    public void setConsumerDAO(ConsumerRepository consumerRepository) {
+    public void setConsumerRepository(ConsumerRepository consumerRepository) {
         this.consumerRepository = consumerRepository;
     }
     @Autowired
-    public void setProductDAO(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
     }
     @Autowired
     public void setOrderRepository(OrderRepository orderRepository) {
@@ -42,12 +44,17 @@ public class ConsumerServiceImpl implements ConsumerService{
     @Override
     @Transactional
     public Consumer findByIdConsumer(long id) {
-        return consumerRepository.findById(id);
+        Consumer consumer = consumerRepository.findById(id);
+        if(consumer == null) {
+            throw new EntityNotFoundException("There is no consumer with id = " + id);
+        }
+        return consumer;
     }
 
     @Override
     @Transactional
     public void deleteByIdConsumer(long id) {
+        findByIdConsumer(id);
         consumerRepository.deleteById(id);
     }
 
@@ -55,7 +62,16 @@ public class ConsumerServiceImpl implements ConsumerService{
     @Override
     @Transactional
     public void saveOrUpdateConsumer(Consumer consumer) {
-        consumerRepository.saveOrUpdate(consumer);
+        if (consumer != null) {
+            Boolean exist = checkConsumerToDB(consumer);
+            if (!exist) {
+                consumerRepository.saveOrUpdate(consumer);
+            }
+            else throw new EntityExistsException("there is such a consumer in database");
+        }
+        else {
+            throw new EntityNotFoundException("the consumer is null");
+        }
     }
 
     @Override
@@ -85,12 +101,12 @@ public class ConsumerServiceImpl implements ConsumerService{
     @Override
     @Transactional
     public List<Product> findAllProducts() {
-        return productRepository.findAll();
+        return productService.findAllProducts();
     }
 
     @Override
     @Transactional
     public Product findByIdProduct(Long id) {
-        return productRepository.findById(id);
+        return productService.findByIdProduct(id);
     }
 }

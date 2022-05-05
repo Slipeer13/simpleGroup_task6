@@ -16,6 +16,8 @@ public interface ProductService {
 
     Boolean checkProductByTitleAndPrice(String title, Integer price);
 
+
+
     Consumer findByIdConsumer(Long id);
 
 }

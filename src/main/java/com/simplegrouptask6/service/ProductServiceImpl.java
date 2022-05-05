@@ -8,20 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
-    private ConsumerRepository consumerRepository;
+    private ConsumerService consumerService;
 
     @Autowired
-    public void setProductDAO(ProductRepository productRepository) {
+    public void setProductRepository(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
     @Autowired
-    public void setConsumerDAO(ConsumerRepository consumerRepository) {
-        this.consumerRepository = consumerRepository;
+    public void setConsumerService(ConsumerService consumerService) {
+        this.consumerService = consumerService;
     }
 
     @Override
@@ -33,12 +35,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product findByIdProduct(long id) {
-        return productRepository.findById(id);
+        Product product = productRepository.findById(id);
+        if(product == null) {
+            throw new EntityNotFoundException("There is no product with id = " + id);
+        }
+        return product;
     }
 
     @Override
     @Transactional
     public void deleteByIdProduct(long id) {
+        findByIdProduct(id);
         productRepository.deleteById(id);
     }
 
@@ -47,7 +54,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void saveOrUpdateProduct(Product product) {
-        productRepository.saveOrUpdate(product);
+        if (product != null) {
+            Boolean exist = checkProductByTitleAndPrice(product.getTitle(), product.getPrice());
+            if (!exist) {
+                productRepository.saveOrUpdate(product);
+            }
+            else throw new EntityExistsException("there is such a product in database");
+        }
+        else {
+            throw new EntityNotFoundException("the product is null");
+        }
     }
 
     @Override
@@ -59,7 +75,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Consumer findByIdConsumer(Long id) {
-        return consumerRepository.findById(id);
+        return consumerService.findByIdConsumer(id);
     }
+
 
 }

@@ -8,9 +8,9 @@
 <form:form action="/saveOrUpdateProduct" modelAttribute="product">
     <form:hidden path="id"/>
     <br><br>
-    Title  <form:input path="title"/>
+    Title  <form:input path="title"/><form:errors path="title"/>
     <br><br>
-    Cost  <form:input path="price"/>
+    Cost  <form:input path="price"/><form:errors path="price"/>
     <br><br>
     <input type="submit">
 </form:form>

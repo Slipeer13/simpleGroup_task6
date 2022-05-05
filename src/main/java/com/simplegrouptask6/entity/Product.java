@@ -1,9 +1,14 @@
 package com.simplegrouptask6.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,8 +27,11 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Size(min = 2, message = "title must be min 2 symbol")
     private String title;
 
+    @Min(value = 1, message = "price must be over 0")
+    @NotNull
     private Integer price;
     //todo Есть тип каскада, который объединяет все эти типы. Проще указать один, чем перечислять все.
     //      Поле корректней назвать consumers.

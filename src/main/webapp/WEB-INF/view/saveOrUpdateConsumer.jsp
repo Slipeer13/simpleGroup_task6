@@ -8,7 +8,7 @@
 <form:form action="/saveOrUpdateConsumer" modelAttribute="consumer">
     <form:hidden path="id"/>
     <br><br>
-    Name  <form:input path="name"/>
+    Name  <form:input path="name"/><form:errors path="name"/>
     <input type="submit">
 </form:form>
 
