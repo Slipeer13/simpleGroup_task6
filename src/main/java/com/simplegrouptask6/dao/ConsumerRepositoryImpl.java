@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-//todo Название класса не корректное.
 @Repository
 public class ConsumerRepositoryImpl implements ConsumerRepository {
     private SessionFactory sessionFactory;
@@ -44,7 +43,6 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
         Session session = sessionFactory.getCurrentSession();
         Consumer consumer = findById(id);
         session.delete(consumer);
-        //todo Смотри комменты в репо продукта.
         //теперь, если CascadeType.ALL, то удалятся и сущности из связанных таблиц
 
        /* Query<Product> query = session.createQuery("delete from Consumer where id =:consumerId");
@@ -58,7 +56,6 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
         session.saveOrUpdate(consumer);
     }
 
-    //todo Почему алиас а,?
     @Override
     public Boolean checkConsumerToDB(Consumer consumer) {
         Session session = sessionFactory.getCurrentSession();

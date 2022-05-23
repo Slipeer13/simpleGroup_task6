@@ -26,8 +26,6 @@ public class Consumer {
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "consumer")
     List<Order> orders;
 
-    //todo Это бизнес-логика. Её не должно быть в сущности. Она должна быть в сервисе.
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

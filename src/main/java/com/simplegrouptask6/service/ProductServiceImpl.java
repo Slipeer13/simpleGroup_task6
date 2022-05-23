@@ -44,12 +44,21 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
+    //todo Получается, ты сейчас 3 раза ходишь в базу, чтобы удалить продукт.
+    // Сначала в методе сервиса findByIdProduct ты получаешь продукт по id, чтобы не удалять null продукт
+    // Затем в методе репозитория deleteById ты опять достаёшь продукт по id.
+    // Почему бы просто не сделать в репо метод deleteProduct(Product product)?
+    // Хибер, наверное, не полезет непосредственно в базу за этим продуктом второй раз,
+    // т.к. он уже получен в рамках этой же транзакции. Но всё равно, зачем его ещё раз получать по id, если он уже есть?
     public void deleteByIdProduct(long id) {
         findByIdProduct(id);
         productRepository.deleteById(id);
     }
 
-    //todo Если title = null будет падать NPE скорее всего. Или невозможно попасть в этот метод с title = null?
+    //todo На мой взгляд лучше переписать без вложенности условий, читаться будет лучше, например:
+    //      * сначала проверяешь, на null. Если null, бросаешь EntityNotFoundException
+    //      * вторым условием проверяешь на наличие, if (exists), бросаешь EntityExistsException
+    //      * без условий сохраняешь запись.
     //теперь product==null не попадёт
     @Override
     @Transactional

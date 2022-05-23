@@ -7,6 +7,7 @@ import java.util.Objects;
 
 @Data
 @Entity
+//todo А почему не просто order? :)
 @Table(name = "order_lines")
 public class Order {
 

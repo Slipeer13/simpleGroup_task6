@@ -12,9 +12,6 @@ import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
 
-//todo Наименование таблиц принято давать в единственном числе.
-//      Опять же, нет файлов со скриптом или миграциями, чтобы оценить, как организована БД.
-//      Для конструкторов так же можно использовать Lombok. Раз он появился в проекте.
 @Entity
 @Getter
 @Setter
@@ -33,8 +30,6 @@ public class Product {
     @Min(value = 1, message = "price must be over 0")
     @NotNull
     private Integer price;
-    //todo Есть тип каскада, который объединяет все эти типы. Проще указать один, чем перечислять все.
-    //      Поле корректней назвать consumers.
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "product")
     List<Order> orders;
 
