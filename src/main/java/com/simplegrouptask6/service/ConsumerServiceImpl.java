@@ -14,7 +14,6 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
-//todo Для продуктов поправил название класса сервиса, для потребителей нет.
 @Service
 public class ConsumerServiceImpl implements ConsumerService{
 
@@ -51,6 +50,7 @@ public class ConsumerServiceImpl implements ConsumerService{
         return consumer;
     }
 
+    //todo См. deleteByIdProduct
     @Override
     @Transactional
     public void deleteByIdConsumer(long id) {
@@ -58,7 +58,7 @@ public class ConsumerServiceImpl implements ConsumerService{
         consumerRepository.deleteById(id);
     }
 
-    //todo А если имя null? Или не может быть?
+    //todo Перепиши без вложенности.
     @Override
     @Transactional
     public void saveOrUpdateConsumer(Consumer consumer) {

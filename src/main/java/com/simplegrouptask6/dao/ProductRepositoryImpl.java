@@ -40,9 +40,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         Session session = sessionFactory.getCurrentSession();
         Product product = findById(id);
         session.delete(product);
-        //todo Чтобы этого не происходило, можно список потребителей перед удалением делать пустым.
-        //      Или можно поиграться с orphanRemoval.
-        //      Или можно для удаления продукта получать его не подтягивая его потребителей, инициализация же lazy.
+        //todo С воодом таблицы Order проблема с удалением Consumer ушла? Удаляются только Order?
         //теперь, если CascadeType.ALL, то удалятся и сущности из связанных таблиц
 
         /*Query<Product> query = session.createQuery("delete from Product where id =:productId");
@@ -57,7 +55,6 @@ public class ProductRepositoryImpl implements ProductRepository {
         session.saveOrUpdate(product);
     }
 
-    //todo Опять алиас "a" для Product. Так не делают.
     @Override
     public Boolean checkProductByTitleAndPrice(String title, Integer price) {
         Session session = sessionFactory.getCurrentSession();

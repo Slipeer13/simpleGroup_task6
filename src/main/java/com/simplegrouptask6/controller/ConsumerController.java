@@ -37,7 +37,6 @@ public class ConsumerController {
         return "viewConsumer";
     }
 
-    //todo См. addProduct
     @RequestMapping("/addConsumer")
     public String addConsumer(Model model) {
         model.addAttribute("consumer", new Consumer());
@@ -53,7 +52,6 @@ public class ConsumerController {
         return "redirect:/";
     }
 
-    //todo См. updateProduct
     @RequestMapping("/updateConsumer")
     public String updateConsumer(@RequestParam("consumerId") Long id, Model model) {
         Consumer consumer = consumerService.findByIdConsumer(id);
@@ -68,13 +66,11 @@ public class ConsumerController {
     }
 
 
-    //todo Как-то странно получать потребителей через контроллер товаров
-    //      Перемудрил с алгоритмом. Сейчас получается:
-    //      1. берём из базы продукт с заданным id
-    //      2. ещё раз берём из базы продукт с заданным id. Зачем, он ведь у нас уже получен?
-    //      3. Из продукта, полученного в п.2 получаем список потребителей.
-    //      Зачем за одним и тем же продуктом ходить в базу 2 раза?
-    //      Зачем логику получения потребителей выносить в dao?
+    //todo Можно конечно и так, но в этом случае, если продукта такого нет,
+    // то мы ловим эксепшен, что такого продукта нет.
+    // Но на сколько это правильно? Наверное, было бы правильней получить пустой список потребителей?
+    // А для этого и не нужно ходить в бд за продуктами.
+    // Нужно взять из БД потребителей, сджойнить таблицу заказов и выбрать записи, у которых order.product = productId.
     @RequestMapping("/showConsumersByProduct")
     public String showConsumersByProduct(@RequestParam("productId") Long id, Model model) {
         Product product = consumerService.findByIdProduct(id);
@@ -83,7 +79,6 @@ public class ConsumerController {
         return "viewConsumerByProduct";
     }
 
-    //todo Зачем контроллеру потребителей зависеть от сервиса продуктов?
     @RequestMapping("/addProductToCart")
     public String addProductToCart(@RequestParam("consumerId") Long id, Model model) {
         List<Product> list = consumerService.findAllProducts();
@@ -92,10 +87,7 @@ public class ConsumerController {
         return "addProductToCart";
     }
 
-    //todo Убери всю эту логику в consumerService.
-    //      Лучше сделай так. Контроллер принял запрос с параметрами. Запросил результат у своего сервиса с этими параметрами.
-    //      Сервис параметры обработал, результат вернул в контроллер. Как сервис обрабатывает параметры,
-    //      контроллеру без разницы. Ему нужен только результат, чтобы ответ сформировать.
+    //todo Ок, пусть так. Но я бы получение продукта делал в методе сервиса. Зачем контроллеру этот продукт?
     @RequestMapping("/saveProductToCart")
     public String saveProductToCart(@RequestParam("consumerId") Long consumerId, @RequestParam("productId") Long productId) {
         Product product = consumerService.findByIdProduct(productId);
