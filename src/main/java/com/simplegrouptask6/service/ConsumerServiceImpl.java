@@ -54,24 +54,21 @@ public class ConsumerServiceImpl implements ConsumerService{
     @Override
     @Transactional
     public void deleteByIdConsumer(long id) {
-        findByIdConsumer(id);
-        consumerRepository.deleteById(id);
+        consumerRepository.deleteConsumer(findByIdConsumer(id));
     }
 
     //todo Перепиши без вложенности.
     @Override
     @Transactional
     public void saveOrUpdateConsumer(Consumer consumer) {
-        if (consumer != null) {
-            Boolean exist = checkConsumerToDB(consumer);
-            if (!exist) {
-                consumerRepository.saveOrUpdate(consumer);
-            }
-            else throw new EntityExistsException("there is such a consumer in database");
-        }
-        else {
+        if (consumer == null) {
             throw new EntityNotFoundException("the consumer is null");
         }
+        Boolean exist = checkConsumerToDB(consumer);
+        if (exist) {
+            throw new EntityExistsException("there is such a consumer in database");
+        }
+        consumerRepository.saveOrUpdate(consumer);
     }
 
     @Override
@@ -82,7 +79,14 @@ public class ConsumerServiceImpl implements ConsumerService{
 
     @Override
     @Transactional
-    public void saveProductToCart(Long consumerId, Product product) {
+    public List<Consumer> findAllConsumersByProductId(Long id) {
+        return consumerRepository.findAllConsumersByProductId(id);
+    }
+
+    @Override
+    @Transactional
+    public void saveProductToCart(Long consumerId, Long productId) {
+        Product product = findByIdProduct(productId);
         Consumer consumer = findByIdConsumer(consumerId);
         Order orderToDB = orderRepository.findByConsumerAndProduct(consumer, product);
         if(orderToDB == null) {

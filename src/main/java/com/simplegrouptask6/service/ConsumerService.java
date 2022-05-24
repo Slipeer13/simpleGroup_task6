@@ -14,7 +14,7 @@ public interface ConsumerService {
 
     void saveOrUpdateConsumer(Consumer consumer);
 
-    void saveProductToCart(Long consumerId, Product product);
+    void saveProductToCart(Long consumerId, Long productId);
 
     List<Product> findAllProducts();
 
@@ -22,4 +22,5 @@ public interface ConsumerService {
 
     Boolean checkConsumerToDB(Consumer consumer);
 
+    List<Consumer> findAllConsumersByProductId(Long id);
 }

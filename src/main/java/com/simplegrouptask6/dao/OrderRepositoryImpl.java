@@ -41,8 +41,7 @@ public class OrderRepositoryImpl implements OrderRepository{
         Query<Order> query = session.createQuery("from Order where consumer =:consumer and product =:product", Order.class);
         query.setParameter("consumer", consumer);
         query.setParameter("product", product);
-        Order order = query.getResultList().size() > 0 ? query.getResultList().get(0) : null;
-        return order;
+        return query.list().isEmpty() ? null : query.getSingleResult();
     }
 
     @Override

@@ -36,16 +36,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteProduct(Product product) {
         Session session = sessionFactory.getCurrentSession();
-        Product product = findById(id);
         session.delete(product);
         //todo С воодом таблицы Order проблема с удалением Consumer ушла? Удаляются только Order?
-        //теперь, если CascadeType.ALL, то удалятся и сущности из связанных таблиц
-
-        /*Query<Product> query = session.createQuery("delete from Product where id =:productId");
-        query.setParameter("productId", id);
-        query.executeUpdate();*/
+        //да, теперь при удалении consumer или product удаляется только order
 
     }
 

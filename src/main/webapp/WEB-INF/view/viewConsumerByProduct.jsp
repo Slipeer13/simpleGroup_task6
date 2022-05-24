@@ -6,7 +6,7 @@
 
 <body>
 <h2>View consumers:</h2>
-<p>Product: ${titleProduct}</p>
+
 <table>
     <tr>
         <th>
@@ -17,10 +17,10 @@
         </th>
 
     </tr>
-    <c:forEach var="order" items="${orders}">
+    <c:forEach var="consumer" items="${consumers}">
         <tr>
-            <td>${order.consumer.id}</td>
-            <td>${order.consumer.name}</td>
+            <td>${consumer.id}</td>
+            <td>${consumer.name}</td>
         </tr>
     </c:forEach>
 </table>

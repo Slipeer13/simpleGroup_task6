@@ -73,9 +73,8 @@ public class ConsumerController {
     // Нужно взять из БД потребителей, сджойнить таблицу заказов и выбрать записи, у которых order.product = productId.
     @RequestMapping("/showConsumersByProduct")
     public String showConsumersByProduct(@RequestParam("productId") Long id, Model model) {
-        Product product = consumerService.findByIdProduct(id);
-        model.addAttribute("orders", product.getOrders());
-        model.addAttribute("titleProduct", product.getTitle());
+        List<Consumer> consumers = consumerService.findAllConsumersByProductId(id);
+        model.addAttribute("consumers", consumers);
         return "viewConsumerByProduct";
     }
 
@@ -90,8 +89,7 @@ public class ConsumerController {
     //todo Ок, пусть так. Но я бы получение продукта делал в методе сервиса. Зачем контроллеру этот продукт?
     @RequestMapping("/saveProductToCart")
     public String saveProductToCart(@RequestParam("consumerId") Long consumerId, @RequestParam("productId") Long productId) {
-        Product product = consumerService.findByIdProduct(productId);
-        consumerService.saveProductToCart(consumerId, product);
+        consumerService.saveProductToCart(consumerId, productId);
         return "redirect:/";
     }
 
