@@ -30,24 +30,16 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
     public Consumer findById(long id) {
         Session session = sessionFactory.getCurrentSession();
         Consumer consumer = session.get(Consumer.class, id);
-        List<Order> orders = consumer.getOrders();
-        if(orders != null) {
-            Hibernate.initialize(orders);
+        if(consumer != null) {
+            Hibernate.initialize(consumer.getOrders());
         }
-
         return consumer;
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteConsumer(Consumer consumer) {
         Session session = sessionFactory.getCurrentSession();
-        Consumer consumer = findById(id);
         session.delete(consumer);
-        //теперь, если CascadeType.ALL, то удалятся и сущности из связанных таблиц
-
-       /* Query<Product> query = session.createQuery("delete from Consumer where id =:consumerId");
-        query.setParameter("consumerId", id);
-        query.executeUpdate();*/
     }
 
     @Override
@@ -62,5 +54,13 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
         Query<Consumer> query = session.createQuery("from Consumer where name =:consumerName", Consumer.class);
         query.setParameter("consumerName", consumer.getName());
         return query.getResultList().size() > 0;
+    }
+
+    @Override
+    public List<Consumer> findAllConsumersByProductId(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<Consumer> query = session.createQuery("select c from Consumer c inner join c.orders o where o.product.id =:productId", Consumer.class);
+        query.setParameter("productId", id);
+        return query.getResultList();
     }
 }

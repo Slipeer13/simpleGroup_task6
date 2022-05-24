@@ -9,10 +9,12 @@ public interface ConsumerRepository {
 
     Consumer findById(long id);
 
-    void deleteById(long id);
+    void deleteConsumer(Consumer consumer);
 
     void saveOrUpdate(Consumer consumer);
 
     Boolean checkConsumerToDB(Consumer consumer);
+
+    List<Consumer> findAllConsumersByProductId(Long id);
 
 }

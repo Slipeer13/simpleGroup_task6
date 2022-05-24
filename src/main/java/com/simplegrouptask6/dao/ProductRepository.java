@@ -10,7 +10,7 @@ public interface ProductRepository {
 
     Product findById(long id);
 
-    void deleteById(long id);
+    void deleteProduct(Product product);
 
     void saveOrUpdate(Product product);
 

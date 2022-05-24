@@ -8,7 +8,8 @@ import java.util.Objects;
 @Data
 @Entity
 //todo А почему не просто order? :)
-@Table(name = "order_lines")
+//но "order" вроде зарезервированное слово в SQL запросах(можно в запросах public.order писать, но это ещё длиннее или 'order')?, не знаю как правильнее, сделал "orders"
+@Table(name = "orders")
 public class Order {
 
     @Id

@@ -51,28 +51,24 @@ public class ProductServiceImpl implements ProductService {
     // Хибер, наверное, не полезет непосредственно в базу за этим продуктом второй раз,
     // т.к. он уже получен в рамках этой же транзакции. Но всё равно, зачем его ещё раз получать по id, если он уже есть?
     public void deleteByIdProduct(long id) {
-        findByIdProduct(id);
-        productRepository.deleteById(id);
+        productRepository.deleteProduct(findByIdProduct(id));
     }
 
     //todo На мой взгляд лучше переписать без вложенности условий, читаться будет лучше, например:
     //      * сначала проверяешь, на null. Если null, бросаешь EntityNotFoundException
     //      * вторым условием проверяешь на наличие, if (exists), бросаешь EntityExistsException
     //      * без условий сохраняешь запись.
-    //теперь product==null не попадёт
     @Override
     @Transactional
     public void saveOrUpdateProduct(Product product) {
-        if (product != null) {
-            Boolean exist = checkProductByTitleAndPrice(product.getTitle(), product.getPrice());
-            if (!exist) {
-                productRepository.saveOrUpdate(product);
-            }
-            else throw new EntityExistsException("there is such a product in database");
-        }
-        else {
+        if (product == null) {
             throw new EntityNotFoundException("the product is null");
         }
+        Boolean exist = checkProductByTitleAndPrice(product.getTitle(), product.getPrice());
+        if (exist) {
+            throw new EntityExistsException("there is such a product in database");
+        }
+        productRepository.saveOrUpdate(product);
     }
 
     @Override
