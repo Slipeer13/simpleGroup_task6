@@ -50,14 +50,12 @@ public class ConsumerServiceImpl implements ConsumerService{
         return consumer;
     }
 
-    //todo См. deleteByIdProduct
     @Override
     @Transactional
     public void deleteByIdConsumer(long id) {
         consumerRepository.deleteConsumer(findByIdConsumer(id));
     }
 
-    //todo Перепиши без вложенности.
     @Override
     @Transactional
     public void saveOrUpdateConsumer(Consumer consumer) {
