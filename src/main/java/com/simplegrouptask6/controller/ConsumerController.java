@@ -65,12 +65,6 @@ public class ConsumerController {
         return "redirect:/";
     }
 
-
-    //todo Можно конечно и так, но в этом случае, если продукта такого нет,
-    // то мы ловим эксепшен, что такого продукта нет.
-    // Но на сколько это правильно? Наверное, было бы правильней получить пустой список потребителей?
-    // А для этого и не нужно ходить в бд за продуктами.
-    // Нужно взять из БД потребителей, сджойнить таблицу заказов и выбрать записи, у которых order.product = productId.
     @RequestMapping("/showConsumersByProduct")
     public String showConsumersByProduct(@RequestParam("productId") Long id, Model model) {
         List<Consumer> consumers = consumerService.findAllConsumersByProductId(id);
@@ -86,7 +80,6 @@ public class ConsumerController {
         return "addProductToCart";
     }
 
-    //todo Ок, пусть так. Но я бы получение продукта делал в методе сервиса. Зачем контроллеру этот продукт?
     @RequestMapping("/saveProductToCart")
     public String saveProductToCart(@RequestParam("consumerId") Long consumerId, @RequestParam("productId") Long productId) {
         consumerService.saveProductToCart(consumerId, productId);

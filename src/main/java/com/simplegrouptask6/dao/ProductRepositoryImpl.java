@@ -39,9 +39,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     public void deleteProduct(Product product) {
         Session session = sessionFactory.getCurrentSession();
         session.delete(product);
-        //todo С воодом таблицы Order проблема с удалением Consumer ушла? Удаляются только Order?
-        //да, теперь при удалении consumer или product удаляется только order
-
     }
 
     @Override
@@ -51,6 +48,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    //todo Опять же. Если судить по п.4* не может быть продуктов с одинаковым названием и разной стоимостью.
+    // Как я понимаю, цена у продукта может меняться. А значит, приложение должно вести себя по другому.
     public Boolean checkProductByTitleAndPrice(String title, Integer price) {
         Session session = sessionFactory.getCurrentSession();
         Query<Product> query = session.createQuery("from Product where title =:productTitle and price =:productPrice", Product.class);
