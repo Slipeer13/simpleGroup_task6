@@ -62,11 +62,10 @@ public class ProductServiceImpl implements ProductService {
         if (product == null) {
             throw new EntityNotFoundException("the product is null");
         }
-        if (product.getId() == null) {
+        Product productFromDB = findProductByTitle(product.getTitle());
+        if (product.getId() == null && productFromDB == null) {
             productRepository.save(product);
-
         } else {
-            Product productFromDB = findProductByTitle(product.getTitle());
             if (productFromDB == null || productFromDB.equals(product)) {
                 productRepository.update(product);
             } else {
