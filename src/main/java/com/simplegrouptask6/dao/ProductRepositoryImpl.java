@@ -28,11 +28,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Product findById(long id) {
         Session session = sessionFactory.getCurrentSession();
-        Product product = session.get(Product.class, id);
-        if(product != null) {
-            Hibernate.initialize(product.getOrders());
-        }
-        return product;
+        return session.get(Product.class, id);
     }
 
     @Override
@@ -42,20 +38,25 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void saveOrUpdate(Product product) {
+    public void save(Product product) {
         Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(product);
+        session.save(product);
+    }
+
+    @Override
+    public void update(Product product) {
+        Session session = sessionFactory.getCurrentSession();
+        session.merge(product);
     }
 
     @Override
     //todo Опять же. Если судить по п.4* не может быть продуктов с одинаковым названием и разной стоимостью.
     // Как я понимаю, цена у продукта может меняться. А значит, приложение должно вести себя по другому.
-    public Boolean checkProductByTitleAndPrice(String title, Integer price) {
+    public Product findProductByTitle(String title) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Product> query = session.createQuery("from Product where title =:productTitle and price =:productPrice", Product.class);
+        Query<Product> query = session.createQuery("from Product where title =:productTitle", Product.class);
         query.setParameter("productTitle", title);
-        query.setParameter("productPrice", price);
-        return query.getResultList().size() > 0;
+        return query.getResultList().isEmpty() ? null : query.getSingleResult();
 
     }
 }

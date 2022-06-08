@@ -30,19 +30,17 @@ public class Product {
     @Min(value = 1, message = "price must be over 0")
     @NotNull
     private Integer price;
-    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "product")
-    List<Order> orders;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return title.equals(product.title) && price.equals(product.price);
+        return id.equals(product.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, price);
+        return Objects.hash(id);
     }
 }

@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,7 +23,7 @@ public class Consumer {
     private String name;
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "consumer")
-    List<Order> orders;
+    List<Purchase> purchases;
 
     @Override
     public boolean equals(Object o) {

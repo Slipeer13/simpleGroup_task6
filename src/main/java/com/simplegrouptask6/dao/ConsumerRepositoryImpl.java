@@ -1,7 +1,6 @@
 package com.simplegrouptask6.dao;
 
 import com.simplegrouptask6.entity.Consumer;
-import com.simplegrouptask6.entity.Order;
 import com.simplegrouptask6.entity.Product;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -31,7 +30,7 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
         Session session = sessionFactory.getCurrentSession();
         Consumer consumer = session.get(Consumer.class, id);
         if(consumer != null) {
-            Hibernate.initialize(consumer.getOrders());
+            Hibernate.initialize(consumer.getPurchases());
         }
         return consumer;
     }
@@ -53,14 +52,14 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
         Session session = sessionFactory.getCurrentSession();
         Query<Consumer> query = session.createQuery("from Consumer where name =:consumerName", Consumer.class);
         query.setParameter("consumerName", consumer.getName());
-        return query.getResultList().size() > 0;
+        return !query.getResultList().isEmpty();
     }
 
     @Override
-    public List<Consumer> findAllConsumersByProductId(Long id) {
+    public List<Consumer> findAllConsumersByProductId(Product product) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Consumer> query = session.createQuery("select c from Consumer c inner join c.orders o where o.product.id =:productId", Consumer.class);
-        query.setParameter("productId", id);
+        Query<Consumer> query = session.createQuery("select c from Consumer c inner join c.purchases p where p.title =:productTitle", Consumer.class);
+        query.setParameter("productTitle", product.getTitle());
         return query.getResultList();
     }
 }

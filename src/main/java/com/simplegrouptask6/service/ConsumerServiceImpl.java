@@ -1,10 +1,9 @@
 package com.simplegrouptask6.service;
 
 import com.simplegrouptask6.dao.ConsumerRepository;
-import com.simplegrouptask6.dao.OrderRepository;
-import com.simplegrouptask6.dao.ProductRepository;
+import com.simplegrouptask6.dao.PurchaseRepository;
 import com.simplegrouptask6.entity.Consumer;
-import com.simplegrouptask6.entity.Order;
+import com.simplegrouptask6.entity.Purchase;
 import com.simplegrouptask6.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ public class ConsumerServiceImpl implements ConsumerService{
 
     private ConsumerRepository consumerRepository;
     private ProductService productService;
-    private OrderRepository orderRepository;
+    private PurchaseRepository purchaseRepository;
 
     @Autowired
     public void setConsumerRepository(ConsumerRepository consumerRepository) {
@@ -30,8 +29,8 @@ public class ConsumerServiceImpl implements ConsumerService{
         this.productService = productService;
     }
     @Autowired
-    public void setOrderRepository(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    public void setOrderRepository(PurchaseRepository purchaseRepository) {
+        this.purchaseRepository = purchaseRepository;
     }
 
     @Override
@@ -78,7 +77,8 @@ public class ConsumerServiceImpl implements ConsumerService{
     @Override
     @Transactional
     public List<Consumer> findAllConsumersByProductId(Long id) {
-        return consumerRepository.findAllConsumersByProductId(id);
+        Product product = findByIdProduct(id);
+        return consumerRepository.findAllConsumersByProductId(product);
     }
 
     @Override
@@ -86,17 +86,18 @@ public class ConsumerServiceImpl implements ConsumerService{
     public void saveProductToCart(Long consumerId, Long productId) {
         Product product = findByIdProduct(productId);
         Consumer consumer = findByIdConsumer(consumerId);
-        Order orderToDB = orderRepository.findByConsumerAndProduct(consumer, product);
-        if(orderToDB == null) {
-            Order order = new Order();
-            order.setConsumer(consumer);
-            order.setProduct(product);
-            order.setQuantity(1);
-            orderRepository.saveOrUpdate(order);
+        Purchase purchaseToDB = purchaseRepository.findByConsumerAndProduct(consumer, product);
+        if(purchaseToDB == null) {
+            Purchase purchase = new Purchase();
+            purchase.setConsumer(consumer);
+            purchase.setPrice(product.getPrice());
+            purchase.setTitle(product.getTitle());
+            purchase.setQuantity(1);
+            purchaseRepository.saveOrUpdate(purchase);
         }
         else {
-            orderToDB.setQuantity(orderToDB.getQuantity() + 1);
-            orderRepository.saveOrUpdate(orderToDB);
+            purchaseToDB.setQuantity(purchaseToDB.getQuantity() + 1);
+            purchaseRepository.saveOrUpdate(purchaseToDB);
         }
     }
 

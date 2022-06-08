@@ -1,6 +1,5 @@
 package com.simplegrouptask6.service;
 
-import com.simplegrouptask6.dao.ConsumerRepository;
 import com.simplegrouptask6.dao.ProductRepository;
 import com.simplegrouptask6.entity.Consumer;
 import com.simplegrouptask6.entity.Product;
@@ -63,17 +62,23 @@ public class ProductServiceImpl implements ProductService {
         if (product == null) {
             throw new EntityNotFoundException("the product is null");
         }
-        Boolean exist = checkProductByTitleAndPrice(product.getTitle(), product.getPrice());
-        if (exist) {
-            throw new EntityExistsException("there is such a product in database");
+        if (product.getId() == null) {
+            productRepository.save(product);
+
+        } else {
+            Product productFromDB = findProductByTitle(product.getTitle());
+            if (productFromDB == null || productFromDB.equals(product)) {
+                productRepository.update(product);
+            } else {
+                throw new EntityExistsException("there is such a product in database");
+            }
         }
-        productRepository.saveOrUpdate(product);
     }
 
     @Override
     @Transactional
-    public Boolean checkProductByTitleAndPrice(String title, Integer price) {
-        return productRepository.checkProductByTitleAndPrice(title, price);
+    public Product findProductByTitle(String title) {
+        return productRepository.findProductByTitle(title);
     }
 
     @Override

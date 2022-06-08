@@ -12,8 +12,10 @@ public interface ProductRepository {
 
     void deleteProduct(Product product);
 
-    void saveOrUpdate(Product product);
+    void save(Product product);
 
-    Boolean checkProductByTitleAndPrice(String title, Integer price);
+    void update(Product product);
+
+    Product findProductByTitle(String title);
 
 }

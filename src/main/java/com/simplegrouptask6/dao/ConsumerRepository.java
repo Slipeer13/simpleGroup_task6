@@ -1,6 +1,7 @@
 package com.simplegrouptask6.dao;
 
 import com.simplegrouptask6.entity.Consumer;
+import com.simplegrouptask6.entity.Product;
 
 import java.util.List;
 
@@ -15,6 +16,6 @@ public interface ConsumerRepository {
 
     Boolean checkConsumerToDB(Consumer consumer);
 
-    List<Consumer> findAllConsumersByProductId(Long id);
+    List<Consumer> findAllConsumersByProductId(Product product);
 
 }

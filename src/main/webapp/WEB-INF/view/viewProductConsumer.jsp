@@ -10,9 +10,6 @@
 <table>
     <tr>
         <th>
-            id
-        </th>
-        <th>
             Title
         </th>
         <th>
@@ -23,12 +20,11 @@
         </th>
     </tr>
     <tr>
-        <c:forEach var="order" items="${orders}">
+        <c:forEach var="purchase" items="${purchases}">
     <tr>
-        <td>${order.product.id} </td>
-        <td>${order.product.title} </td>
-        <td>${order.product.price} </td>
-        <td>${order.quantity} </td>
+        <td>${purchase.title} </td>
+        <td>${purchase.price} </td>
+        <td>${purchase.quantity} </td>
     </tr>
     </c:forEach>
     </tr>
