@@ -78,7 +78,7 @@ public class ConsumerServiceImpl implements ConsumerService{
     @Transactional
     public List<Consumer> findAllConsumersByProductId(Long id) {
         Product product = findByIdProduct(id);
-        return consumerRepository.findAllConsumersByProductId(product);
+        return consumerRepository.findAllConsumersByProduct(product);
     }
 
     @Override
@@ -90,8 +90,8 @@ public class ConsumerServiceImpl implements ConsumerService{
         if(purchaseToDB == null) {
             Purchase purchase = new Purchase();
             purchase.setConsumer(consumer);
+            purchase.setProduct(product);
             purchase.setPrice(product.getPrice());
-            purchase.setTitle(product.getTitle());
             purchase.setQuantity(1);
             purchaseRepository.saveOrUpdate(purchase);
         }

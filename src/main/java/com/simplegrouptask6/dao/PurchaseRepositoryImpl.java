@@ -21,10 +21,9 @@ public class PurchaseRepositoryImpl implements PurchaseRepository {
     @Override
     public Purchase findByConsumerAndProduct(Consumer consumer, Product product) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Purchase> query = session.createQuery("from Purchase where consumer =:consumer and title =:title and price =:price", Purchase.class);
+        Query<Purchase> query = session.createQuery("from Purchase where consumer =:consumer and product =:product", Purchase.class);
         query.setParameter("consumer", consumer);
-        query.setParameter("title", product.getTitle());
-        query.setParameter("price", product.getPrice());
+        query.setParameter("product", product);
         return query.list().isEmpty() ? null : query.getSingleResult();
     }
 

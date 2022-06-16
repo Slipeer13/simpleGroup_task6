@@ -14,9 +14,10 @@ CREATE TABLE consumer
  CREATE TABLE purchase (
 	id SERIAL PRIMARY KEY,
     consumer_id integer not null,
-  	title varchar(30) not null,
+    product_id integer not null,
   	price integer not null,
 	quantity integer not null,
-  	FOREIGN KEY (consumer_id) REFERENCES consumer (id)
+  	FOREIGN KEY (consumer_id) REFERENCES consumer (id),
+  	FOREIGN KEY (product_id) REFERENCES product (id)
 
   );

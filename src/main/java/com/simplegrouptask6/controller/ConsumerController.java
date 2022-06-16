@@ -2,6 +2,7 @@ package com.simplegrouptask6.controller;
 
 import com.simplegrouptask6.entity.Consumer;
 import com.simplegrouptask6.entity.Product;
+import com.simplegrouptask6.entity.Purchase;
 import com.simplegrouptask6.service.ConsumerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Validated
 @Controller

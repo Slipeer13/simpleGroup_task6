@@ -28,7 +28,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Product findById(long id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.get(Product.class, id);
+        Product product = session.get(Product.class, id);
+        if(product != null) {
+            Hibernate.initialize(product.getPurchases());
+        }
+        return product;
     }
 
     @Override

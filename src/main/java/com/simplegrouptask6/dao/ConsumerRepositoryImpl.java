@@ -56,9 +56,9 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
     }
 
     @Override
-    public List<Consumer> findAllConsumersByProductId(Product product) {
+    public List<Consumer> findAllConsumersByProduct(Product product) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Consumer> query = session.createQuery("select c from Consumer c inner join c.purchases p where p.title =:productTitle", Consumer.class);
+        Query<Consumer> query = session.createQuery("select c from Consumer c inner join c.purchases p where p.product.title =:productTitle", Consumer.class);
         query.setParameter("productTitle", product.getTitle());
         return query.getResultList();
     }

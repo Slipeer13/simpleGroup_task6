@@ -17,8 +17,6 @@ public class Purchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-
     private Integer price;
 
     private Integer quantity;
@@ -27,16 +25,21 @@ public class Purchase {
     @JoinColumn(name = "consumer_id")
     private Consumer consumer;
 
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Purchase purchase = (Purchase) o;
-        return id.equals(purchase.id) && title.equals(purchase.title) && price.equals(purchase.price) && quantity.equals(purchase.quantity) && consumer.equals(purchase.consumer);
+        return id.equals(purchase.id) && price.equals(purchase.price) && quantity.equals(purchase.quantity) && consumer.equals(purchase.consumer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, price, quantity, consumer);
+        return Objects.hash(id, price, quantity, consumer);
     }
 }

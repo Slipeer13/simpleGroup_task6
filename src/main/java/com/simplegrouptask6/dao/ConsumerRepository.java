@@ -16,6 +16,6 @@ public interface ConsumerRepository {
 
     Boolean checkConsumerToDB(Consumer consumer);
 
-    List<Consumer> findAllConsumersByProductId(Product product);
+    List<Consumer> findAllConsumersByProduct(Product product);
 
 }

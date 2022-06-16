@@ -31,6 +31,9 @@ public class Product {
     @NotNull
     private Integer price;
 
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "product")
+    List<Purchase> purchases;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
