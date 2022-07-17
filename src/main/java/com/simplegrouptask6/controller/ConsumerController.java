@@ -73,6 +73,8 @@ public class ConsumerController {
         return "viewConsumerByProduct";
     }
 
+    //todo Название методов я бы поменял. В приложении уже нет корзины. Вводит в заблуждение.
+    // На работоспособность конечно не влияет.
     @RequestMapping("/addProductToCart")
     public String addProductToCart(@RequestParam("consumerId") Long id, Model model) {
         List<Product> list = consumerService.findAllProducts();
