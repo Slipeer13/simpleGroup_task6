@@ -54,8 +54,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    //todo Опять же. Если судить по п.4* не может быть продуктов с одинаковым названием и разной стоимостью.
-    // Как я понимаю, цена у продукта может меняться. А значит, приложение должно вести себя по другому.
     public Product findProductByTitle(String title) {
         Session session = sessionFactory.getCurrentSession();
         Query<Product> query = session.createQuery("from Product where title =:productTitle", Product.class);

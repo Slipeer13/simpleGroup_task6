@@ -76,6 +76,10 @@ public class ConsumerServiceImpl implements ConsumerService{
 
     @Override
     @Transactional
+    //todo Усложнил. Получается 2 запроса в бд у тебя: сначала достаёшь продукт по id.
+    // Потом достаёшь потребителей, купивших продукт с таким названием.
+    // Но ведь покупка связана с продуктом по его id. Можно сразу запрос по id продукта делать. Зачем по названию?
+    // И будет просто 1 запрос.
     public List<Consumer> findAllConsumersByProductId(Long id) {
         Product product = findByIdProduct(id);
         return consumerRepository.findAllConsumersByProduct(product);
@@ -88,6 +92,7 @@ public class ConsumerServiceImpl implements ConsumerService{
         Consumer consumer = findByIdConsumer(consumerId);
         Purchase purchaseToDB = purchaseRepository.findByConsumerAndProduct(consumer, product);
         if(purchaseToDB == null) {
+            //todo По сути, зачем новый объект создавать? Можно использовать уже существующий purchaseToDB
             Purchase purchase = new Purchase();
             purchase.setConsumer(consumer);
             purchase.setProduct(product);
