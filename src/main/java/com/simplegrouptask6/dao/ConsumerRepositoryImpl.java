@@ -1,7 +1,6 @@
 package com.simplegrouptask6.dao;
 
 import com.simplegrouptask6.entity.Consumer;
-import com.simplegrouptask6.entity.Product;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -26,9 +25,9 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
     }
 
     @Override
-    public Consumer findById(long id) {
+    public Consumer findById(long consumerId) {
         Session session = sessionFactory.getCurrentSession();
-        Consumer consumer = session.get(Consumer.class, id);
+        Consumer consumer = session.get(Consumer.class, consumerId);
         if(consumer != null) {
             Hibernate.initialize(consumer.getPurchases());
         }
@@ -56,10 +55,10 @@ public class ConsumerRepositoryImpl implements ConsumerRepository {
     }
 
     @Override
-    public List<Consumer> findAllConsumersByProduct(Product product) {
+    public List<Consumer> findAllConsumersByProduct(long productId) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Consumer> query = session.createQuery("select c from Consumer c inner join c.purchases p where p.product.title =:productTitle", Consumer.class);
-        query.setParameter("productTitle", product.getTitle());
+        Query<Consumer> query = session.createQuery("select c from Consumer c inner join c.purchases p where p.product.id =:productId", Consumer.class);
+        query.setParameter("productId", productId);
         return query.getResultList();
     }
 }

@@ -1,8 +1,8 @@
 package com.simplegrouptask6.service;
 
 import com.simplegrouptask6.dao.ProductRepository;
-import com.simplegrouptask6.entity.Consumer;
 import com.simplegrouptask6.entity.Product;
+import com.simplegrouptask6.entity.Purchase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +14,10 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
-    private ConsumerService consumerService;
 
     @Autowired
     public void setProductRepository(ProductRepository productRepository) {
         this.productRepository = productRepository;
-    }
-    @Autowired
-    public void setConsumerService(ConsumerService consumerService) {
-        this.consumerService = consumerService;
     }
 
     @Override
@@ -70,18 +65,22 @@ public class ProductServiceImpl implements ProductService {
     //todo Обрати внимание на модификаторы доступа у методов сервиса. Это же касается и сервиса покупателей.
     // Например, этот метод используется только в этом классе.
     // Зачем он в интерфейсе, если извне никакие классы этот метод не используют? Зачем он публичный?
+    //не получится сделать private: Methods annotated with '@Transactional' must be overridable - idea говорит, а те всегда public
     public Product findProductByTitle(String title) {
         return productRepository.findProductByTitle(title);
     }
 
-    @Override
-    @Transactional
+
     //todo Если посмотреть на метод findAllConsumersByProductId в ConsumerServiceImpl,
     // то можно ведь сделать подобным образом. Только сначала там избавиться от 2-х запросов, один из которых лишний.
     // Сджойнить отношения продукта и покупок и выбрать нужные по id потребителя.
     // И тогда не придётся между собой связывать сервисы потребителя и продукта.
-    public Consumer findByIdConsumer(Long id) {
-        return consumerService.findByIdConsumer(id);
+
+
+    @Override
+    @Transactional
+    public List<Purchase> findAllProductsByConsumerId(Long consumerId) {
+        return productRepository.findAllProductsByConsumerId(consumerId);
     }
 
 

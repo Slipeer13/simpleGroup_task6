@@ -1,6 +1,5 @@
 package com.simplegrouptask6.controller;
 
-import com.simplegrouptask6.entity.Consumer;
 import com.simplegrouptask6.entity.Purchase;
 import com.simplegrouptask6.entity.Product;
 import com.simplegrouptask6.service.ProductService;
@@ -66,11 +65,9 @@ public class ProductController {
     }
 
     @RequestMapping("/showProductByConsumer")
-    public String showProductByConsumer(@RequestParam("consumerId") Long id, Model model) {
-        Consumer consumer = productService.findByIdConsumer(id);
-        List<Purchase> purchases = consumer.getPurchases();
+    public String showProductByConsumer(@RequestParam("consumerId") Long consumerId, Model model) {
+        List<Purchase> purchases = productService.findAllProductsByConsumerId(consumerId);
         model.addAttribute("purchases", purchases);
-        model.addAttribute("nameConsumer", consumer.getName());
         return "viewProductConsumer";
     }
 
