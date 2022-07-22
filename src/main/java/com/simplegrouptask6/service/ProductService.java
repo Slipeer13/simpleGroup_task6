@@ -1,7 +1,7 @@
 package com.simplegrouptask6.service;
 
-import com.simplegrouptask6.entity.Consumer;
 import com.simplegrouptask6.entity.Product;
+import com.simplegrouptask6.entity.Purchase;
 
 import java.util.List;
 
@@ -16,6 +16,5 @@ public interface ProductService {
 
     Product findProductByTitle(String title);
 
-    Consumer findByIdConsumer(Long id);
-
+    List<Purchase> findAllProductsByConsumerId(Long consumerId);
 }

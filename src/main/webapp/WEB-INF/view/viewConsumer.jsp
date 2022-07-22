@@ -25,7 +25,7 @@
         <c:url var ="showProductButton" value="/showProductByConsumer">
             <c:param name="consumerId" value="${consumer.id}"></c:param>
         </c:url>
-        <c:url var ="addProductToCart" value="/addProductToCart">
+        <c:url var ="addProductToCart" value="/addProductToPurchase">
             <c:param name="consumerId" value="${consumer.id}"></c:param>
         </c:url>
         <tr>

@@ -2,7 +2,6 @@ package com.simplegrouptask6.controller;
 
 import com.simplegrouptask6.entity.Consumer;
 import com.simplegrouptask6.entity.Product;
-import com.simplegrouptask6.entity.Purchase;
 import com.simplegrouptask6.service.ConsumerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,6 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Validated
 @Controller
@@ -75,16 +73,16 @@ public class ConsumerController {
 
     //todo Название методов я бы поменял. В приложении уже нет корзины. Вводит в заблуждение.
     // На работоспособность конечно не влияет.
-    @RequestMapping("/addProductToCart")
-    public String addProductToCart(@RequestParam("consumerId") Long id, Model model) {
+    @RequestMapping("/addProductToPurchase")
+    public String addProductToPurchase(@RequestParam("consumerId") Long id, Model model) {
         List<Product> list = consumerService.findAllProducts();
         model.addAttribute("products", list);
         model.addAttribute("consumerId", id);
-        return "addProductToCart";
+        return "addProductToPurchase";
     }
 
-    @RequestMapping("/saveProductToCart")
-    public String saveProductToCart(@RequestParam("consumerId") Long consumerId, @RequestParam("productId") Long productId) {
+    @RequestMapping("/saveProductToPurchase")
+    public String saveProductToPurchase(@RequestParam("consumerId") Long consumerId, @RequestParam("productId") Long productId) {
         consumerService.saveProductToCart(consumerId, productId);
         return "redirect:/";
     }

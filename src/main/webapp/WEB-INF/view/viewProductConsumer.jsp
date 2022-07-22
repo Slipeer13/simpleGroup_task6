@@ -6,7 +6,6 @@
 
 <body>
 <h2>Products:</h2>
-<p>Consumer: ${nameConsumer}</p>
 <table>
     <tr>
         <th>

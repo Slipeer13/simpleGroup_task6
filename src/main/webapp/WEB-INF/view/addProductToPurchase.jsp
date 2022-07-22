@@ -19,7 +19,7 @@
         </th>
     </tr>
     <c:forEach var="product" items="${products}">
-        <c:url var ="addProduct" value="/saveProductToCart">
+        <c:url var ="addProduct" value="/saveProductToPurchase">
             <c:param name="productId" value="${product.id}"></c:param>
             <c:param name="consumerId" value="${consumerId}"></c:param>
         </c:url>
@@ -28,7 +28,7 @@
             <td>${product.title}</td>
             <td>${product.price}</td>
             <td>
-                <input type="button" value="addProductToCart" onclick="window.location.href = '${addProduct}'">
+                <input type="button" value="addProductToPurchase" onclick="window.location.href = '${addProduct}'">
             </td>
 
         </tr>

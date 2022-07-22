@@ -1,6 +1,7 @@
 package com.simplegrouptask6.dao;
 
 import com.simplegrouptask6.entity.Product;
+import com.simplegrouptask6.entity.Purchase;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -60,5 +61,13 @@ public class ProductRepositoryImpl implements ProductRepository {
         query.setParameter("productTitle", title);
         return query.getResultList().isEmpty() ? null : query.getSingleResult();
 
+    }
+
+    @Override
+    public List<Purchase> findAllProductsByConsumerId(Long consumerId) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<Purchase> query = session.createQuery("select c from Purchase c inner join c.consumer p where p.id =:consumerId", Purchase.class);
+        query.setParameter("consumerId", consumerId);
+        return query.getResultList();
     }
 }

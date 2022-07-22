@@ -35,11 +35,11 @@ public class Purchase {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Purchase purchase = (Purchase) o;
-        return id.equals(purchase.id) && price.equals(purchase.price) && quantity.equals(purchase.quantity) && consumer.equals(purchase.consumer);
+        return id.equals(purchase.id) && price.equals(purchase.price) && quantity.equals(purchase.quantity) && consumer.equals(purchase.consumer) && product.equals(purchase.product);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, price, quantity, consumer);
+        return Objects.hash(id, price, quantity, consumer, product);
     }
 }
